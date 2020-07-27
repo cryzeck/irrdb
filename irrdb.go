@@ -24,7 +24,6 @@ func doquery(connect, args string) {
 	} else {
 		log.Fatal(fmt.Sprintf("Got: %s from server.", message))
 	}
-	fmt.Println("For loop")
 	fmt.Fprintf(c, args+"\n")
 	req, _ := bufio.NewReader(c).ReadString('C')
 	fmt.Println(req)
@@ -36,15 +35,15 @@ func doquery(connect, args string) {
  * AUT-NUM  : AS%d
  */
 
+/* if AS-SET  : !a6+res
+   if AUT-NUM : !6as+res */
 func Queryv6(s, res string) {
-	/* if AS-SET  : !a6+res
-	   if AUT-NUM : !6as+res */
 	doquery(s, "!a6"+res)
 }
 
-func Queryv4() {
-	/* if AS-SET  : !a4+res
-	   if AUT-NUM : !gas+res */
+/* if AS-SET  : !a4+res
+   if AUT-NUM : !gas+res */
 
-	fmt.Println("getv6!")
+func Queryv4() {
+	doquery(s, "!a6"+res)
 }
