@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-  "regexp"
 	"net"
+	"regexp"
 )
 
 func doquery(connect, args string) {
@@ -31,35 +31,24 @@ func doquery(connect, args string) {
 	return
 }
 
-/* Need to check if res = AS-SET or AUT-NUM.
- * AS-SET   : AS-%s
- * AUT-NUM  : AS%d
- */
+func getquery(res string) string {
+	var autnum = regexp.MustCompile(`^\d{1,10}$`)
+	var asset = regexp.MustCompile(`AS-[A-Za-z0-9]+`)
 
-func getquery(res string) string{
-/* if AS-SET  : !a6+res
-   if AUT-NUM : !6as+res */
+	if autnum.MatchString(res) {
+		return fmt.Sprintf("!6as%s", res)
+	}
 
-  var autnum = regexp.MustCompile(`^\d{1,10}$`)
-  var asset = regexp.MustCompile(`AS-[A-Za-z0-9]+`)
-
-  if (autnum.MatchString(res)) {
-    return fmt.Sprintf("!6as%s", res)
-  }
-
-  if (asset.MatchString(res)) {
-    return fmt.Sprintf("!a6%s", res)
-  }
-  return "0"
+	if asset.MatchString(res) {
+		return fmt.Sprintf("!a6%s", res)
+	}
+	return "0"
 }
 
 func Queryv6(s, res string) {
-  doquery(s, getquery(res))
+	doquery(s, getquery(res))
 }
 
-/* if AS-SET  : !a4+res
-   if AUT-NUM : !gas+res */
-
 func Queryv4(s, res string) {
-	doquery(s, "!a6"+res)
+	doquery(s, "!a6"+res) //!a4+res - !gas+res
 }
