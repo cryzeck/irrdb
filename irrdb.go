@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+  "regexp"
 	"net"
 )
 
@@ -35,15 +36,30 @@ func doquery(connect, args string) {
  * AUT-NUM  : AS%d
  */
 
+func getquery(res string) string{
 /* if AS-SET  : !a6+res
    if AUT-NUM : !6as+res */
+
+  var autnum = regexp.MustCompile(`^\d{1,10}$`)
+  var asset = regexp.MustCompile(`AS-[A-Za-z0-9]+`)
+
+  if (autnum.MatchString(res)) {
+    return fmt.Sprintf("!6as%s", res)
+  }
+
+  if (asset.MatchString(res)) {
+    return fmt.Sprintf("!a6%s", res)
+  }
+  return "0"
+}
+
 func Queryv6(s, res string) {
-	doquery(s, "!a6"+res)
+  doquery(s, getquery(res))
 }
 
 /* if AS-SET  : !a4+res
    if AUT-NUM : !gas+res */
 
-func Queryv4() {
+func Queryv4(s, res string) {
 	doquery(s, "!a6"+res)
 }
